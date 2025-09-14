@@ -1,120 +1,44 @@
-<input
-  [(ngModel)]="search"
-  class="w-full p-3 rounded-2xl border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 outline-none"
-  placeholder="Search for a product..."
-/>
+<div class="max-w-4xl mx-auto px-6 py-10 pt-25">
+  <h1 class="text-3xl font-bold mb-16">Shopping Cart</h1>
 
-<section class="bg-white py-8 antialiased md:py-16">
-  <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
-    <h2 class="text-xl font-semibold text-brown-900 sm:text-2xl">{{ header }} </h2>
-
-    <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
-      <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
-        <div class="space-y-6">
-          @for(cartItem of filterProducts(); track cartItem.id){
-          <!-- @for(cartItem of icart.items; track cartItem.id){ -->
-            <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0 hover:bg-gray-100">
-              <a href="#" class="shrink-0 md:order-1 bg-brown-200">
-                <img class="h-20 w-20" [src]="cartItem.product.imageUrl" alt="Product image" />
-              </a>
-
-              <label for="counter-input" class="sr-only">Choose quantity:</label>
-              <div class="flex items-center justify-between md:order-3 md:justify-end">
-                <div class="flex items-center">
-                  <button type="button" class="inline-flex h-5 w-5 items-center justify-center rounded-md border border-brown-300 bg-brown-100 hover:bg-brown-200 focus:outline-none focus:ring-2 focus:ring-brown-200">-</button>
-                  <input type="text" [value]="cartItem.quantity" class="w-10 text-center border-0 bg-transparent text-sm font-medium text-brown-900 focus:outline-none" />
-                  <button type="button" class="inline-flex h-5 w-5 items-center justify-center rounded-md border border-brown-300 bg-brown-100 hover:bg-brown-200 focus:outline-none focus:ring-2 focus:ring-brown-200">+</button>
-                </div>
-                <div class="text-end md:order-4 md:w-32">
-                  <p class="text-base font-bold text-brown-900">${{ cartItem.price }}</p>
-                </div>
-              </div>
-
-              <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                <a href="#" class="text-base font-medium text-brown-900 hover:underline">{{ cartItem.product.name }}</a>
-
-                <div class="flex items-center gap-4">
-                  @if(cartItem.quantity != 0){
-                  <button (click)= "updateQuantity(cartItem.id)" type="button" class="text-sm font-medium text-blue-600 hover:text-brown-900">Buy</button>}
-                  <button type="button" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-black">
-                    <svg class="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z" />
-                    </svg>
-                    Add to Favorites
-                  </button>
-                  <button type="button" class="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
-                    <svg class="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
-                    </svg>
-                    Remove
-                  </button>
-                    @switch(cartItem.quantity) {
-                    @case(1) {
-                      <p class="text-base font-bold  text-red-600">Last One Item</p>
-                    }
-                    @case(2) {
-                      <p class="text-base font-bold text-red-600">Last Two Items</p>
-                    }
-                    @case(0) {
-                      <p class="text-base font-bold text-red-600">Out Of Stock</p>
-                    }
-                    @default {
-                    <p class="text-base font-bold text-green-600">In Stock</p>
-                    }
-                  }                  
-                </div>
-              </div>
-            </div>
-          }
+  <div class="mt-12">
+     @for(item of cartItems;track item.id){
+    <app-cart-item [item]="item" (remove)="removeItem($event)"></app-cart-item>
+     }
+     <button (click)="resetAllProducts()" class="mb-4 px-4 py-2 bg-indigo-600 text-white rounded">
+      Reset Quantities
+    </button>
+    <div class="py-6 border-t border-gray-300">
+      <div class="mt-10 pt-6 space-y-3">
+        <div class="flex justify-between text-gray-700">
+          <span>Subtotal</span>
+          <span>$99.00</span>
+        </div>
+        <div class="flex justify-between text-gray-700">
+          <span>Shipping</span>
+          <span>$5.00</span>
+        </div>
+        <div class="flex justify-between text-gray-700">
+          <span>Tax</span>
+          <span>$8.32</span>
+        </div>
+        <div class="flex justify-between font-semibold text-lg">
+          <span>Order total</span>
+          <span>$112.32</span>
         </div>
       </div>
 
-      <div class="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
-        <div class="space-y-4 rounded-lg border border-brown-200 bg-white p-4 shadow-sm sm:p-6">
-          <p class="text-xl font-semibold text-brown-900">Order summary</p>
-
-          <div class="space-y-4">
-            <div class="space-y-2">
-              <dl class="flex items-center justify-between gap-4">
-                <dt class="text-base font-normal text-brown-700">Original price</dt>
-                <dd class="text-base font-medium text-brown-900">${{cart.totalPrice}}</dd>
-              </dl>
-
-              <dl class="flex items-center justify-between gap-4">
-                <dt class="text-base font-normal text-brown-700">Savings</dt>
-                <dd class="text-base font-medium text-green-600">0</dd>
-              </dl>
-            </div>
-
-            <dl class="flex items-center justify-between gap-4 border-t border-brown-200 pt-2">
-              <dt class="text-base font-bold text-brown-900">Total</dt>
-              <dd class="text-base font-bold text-brown-900">${{cart.totalPrice}}</dd>
-            </dl>
-          </div>
-
-          <a href="#" class="flex w-full items-center justify-center rounded-lg bg-brown-700 px-5 py-2.5 text-sm font-medium text-brown-700 hover:bg-brown-800">Proceed to Checkout</a>
-
-          <div class="flex items-center justify-center gap-2">
-            <span class="text-sm font-normal text-brown-700"> or </span>
-            <a href="#" class="inline-flex items-center gap-2 text-sm font-medium text-brown-700 underline hover:no-underline">
-              Continue Shopping
-              <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
-              </svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="space-y-4 rounded-lg border border-brown-200 bg-white p-4 shadow-sm sm:p-6">
-          <form class="space-y-4">
-            <div>
-              <label for="voucher" class="mb-2 block text-sm font-medium text-brown-900"> Do you have a voucher or gift card? </label>
-              <input type="text" id="voucher" class="border border-brown-300 rounded-lg p-2.5 text-brown-900 w-full" placeholder="" required />
-            </div>
-            <button type="submit" class="bg-brown-700 text-white px-5 py-2.5 rounded-lg hover:bg-brown-800">Apply Code</button>
-          </form>
-        </div>
+      <!-- Checkout -->
+      <div class="mt-6">
+        <button
+          class="w-full bg-indigo-700 text-white py-3 rounded-lg hover:bg-indigo-500"
+        >
+          Checkout
+        </button>
+        <p class="text-center text-indigo-600 mt-3">
+          or <a href="#" class="underline">Continue Shopping →</a>
+        </p>
       </div>
     </div>
   </div>
-</section>
+</div>
